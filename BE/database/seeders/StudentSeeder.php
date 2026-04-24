@@ -1,0 +1,151 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\Student;
+
+class StudentSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $students = [
+            [
+                'student_code'    => 'HV-2026-001',
+                'full_name'       => 'Nguyễn Minh Khôi',
+                'dob'             => '2015-03-15',
+                'parent_name'     => 'Nguyễn Văn Bình',
+                'parent_phone'    => '0901111001',
+                'email'           => null,
+                'enrollment_date' => '2026-01-05',
+                'start_date'      => '2026-01-10',
+                'entry_level'     => 'Starters',
+                'status'          => 'active',
+                'notes'           => null,
+            ],
+            [
+                'student_code'    => 'HV-2026-002',
+                'full_name'       => 'Trần Thị Bảo Châu',
+                'dob'             => '2014-07-20',
+                'parent_name'     => 'Trần Văn Nam',
+                'parent_phone'    => '0901111002',
+                'email'           => null,
+                'enrollment_date' => '2026-01-08',
+                'start_date'      => '2026-01-10',
+                'entry_level'     => 'Movers',
+                'status'          => 'active',
+                'notes'           => 'Con giáo viên cũ, giảm 10%.',
+            ],
+            [
+                'student_code'    => 'HV-2026-003',
+                'full_name'       => 'Lê Hoàng Phúc',
+                'dob'             => '2013-11-02',
+                'parent_name'     => 'Lê Thị Mai',
+                'parent_phone'    => '0901111003',
+                'email'           => null,
+                'enrollment_date' => '2026-01-10',
+                'start_date'      => '2026-01-15',
+                'entry_level'     => 'Movers',
+                'status'          => 'active',
+                'notes'           => null,
+            ],
+            [
+                'student_code'    => 'HV-2026-004',
+                'full_name'       => 'Phạm Ngọc Hân',
+                'dob'             => '2012-05-18',
+                'parent_name'     => 'Phạm Văn Tài',
+                'parent_phone'    => '0901111004',
+                'email'           => 'phamtai@gmail.com',
+                'enrollment_date' => '2026-01-12',
+                'start_date'      => '2026-01-15',
+                'entry_level'     => 'Flyers',
+                'status'          => 'active',
+                'notes'           => null,
+            ],
+            [
+                'student_code'    => 'HV-2026-005',
+                'full_name'       => 'Võ Thành Đạt',
+                'dob'             => '2011-09-30',
+                'parent_name'     => 'Võ Văn Hùng',
+                'parent_phone'    => '0901111005',
+                'email'           => null,
+                'enrollment_date' => '2026-02-01',
+                'start_date'      => '2026-02-05',
+                'entry_level'     => 'IELTS 4.0',
+                'status'          => 'active',
+                'notes'           => null,
+            ],
+            [
+                'student_code'    => 'HV-2026-006',
+                'full_name'       => 'Đinh Thị Khánh Linh',
+                'dob'             => '2014-02-14',
+                'parent_name'     => 'Đinh Văn Phong',
+                'parent_phone'    => '0901111006',
+                'email'           => null,
+                'enrollment_date' => '2026-02-10',
+                'start_date'      => '2026-02-15',
+                'entry_level'     => 'Starters',
+                'status'          => 'active',
+                'notes'           => null,
+            ],
+            [
+                'student_code'    => 'HV-2026-007',
+                'full_name'       => 'Huỳnh Minh Tuấn',
+                'dob'             => '2010-06-25',
+                'parent_name'     => 'Huỳnh Văn Dũng',
+                'parent_phone'    => '0901111007',
+                'email'           => 'huynhdung@gmail.com',
+                'enrollment_date' => '2026-02-15',
+                'start_date'      => '2026-03-01',
+                'entry_level'     => 'IELTS 5.0',
+                'status'          => 'active',
+                'notes'           => 'Mục tiêu IELTS 6.0 cuối năm.',
+            ],
+            [
+                'student_code'    => 'HV-2026-008',
+                'full_name'       => 'Ngô Thị Mỹ Duyên',
+                'dob'             => '2015-12-08',
+                'parent_name'     => 'Ngô Văn Thiện',
+                'parent_phone'    => '0901111008',
+                'email'           => null,
+                'enrollment_date' => '2026-03-01',
+                'start_date'      => '2026-03-05',
+                'entry_level'     => 'Movers',
+                'status'          => 'active',
+                'notes'           => null,
+            ],
+            [
+                'student_code'    => 'HV-2026-009',
+                'full_name'       => 'Bùi Quang Khải',
+                'dob'             => '2013-04-17',
+                'parent_name'     => 'Bùi Thị Hương',
+                'parent_phone'    => '0901111009',
+                'email'           => null,
+                'enrollment_date' => '2026-03-10',
+                'start_date'      => '2026-03-15',
+                'entry_level'     => 'Flyers',
+                'status'          => 'paused',
+                'notes'           => 'Bảo lưu vì gia đình đi nước ngoài.',
+            ],
+            [
+                'student_code'    => 'HV-2026-010',
+                'full_name'       => 'Trương Thị Lan Anh',
+                'dob'             => '2012-08-22',
+                'parent_name'     => 'Trương Văn Long',
+                'parent_phone'    => '0901111010',
+                'email'           => 'truonglong@gmail.com',
+                'enrollment_date' => '2026-01-20',
+                'start_date'      => '2026-02-01',
+                'entry_level'     => 'IELTS 4.5',
+                'status'          => 'inactive',
+                'left_date'       => '2026-04-01',
+                'left_reason'     => 'Chuyển trường, không có thời gian.',
+                'notes'           => null,
+            ],
+        ];
+
+        foreach ($students as $student) {
+            Student::create($student);
+        }
+    }
+}
