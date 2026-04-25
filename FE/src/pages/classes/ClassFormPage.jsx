@@ -194,7 +194,16 @@ export default function ClassFormPage() {
                   className={inputCls("level")}
                 >
                   <option value="">-- Chọn cấp độ --</option>
-                  {["Starter", "Movers", "Flyers", "KET", "PET"].map((l) => (
+                  {[
+                    "Starters",
+                    "Movers",
+                    "Flyers",
+                    "IELTS 4.0",
+                    "IELTS 5.0",
+                    "Giao tiếp",
+                    "KET",
+                    "PET",
+                  ].map((l) => (
                     <option key={l} value={l}>
                       {l}
                     </option>

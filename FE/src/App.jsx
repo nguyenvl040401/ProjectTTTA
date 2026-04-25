@@ -29,7 +29,7 @@ import ClassFormPage from "./pages/classes/ClassFormPage";
 import ClassDetailPage from "./pages/classes/ClassDetailPage"; // thêm
 import TeacherListPage from "./pages/teachers/TeacherListPage"; // thêm
 import TeacherFormPage from "./pages/teachers/TeacherFormPage"; // thêm
-import PaymentPage from "./pages/payments/PaymentPage";
+import PaymentPage from "./pages/Payments/PaymentPage";
 import AttendancePage from "./pages/attendance/AttendancePage";
 
 // ── PRIVATE ROUTE ────────────────────────────────────────────

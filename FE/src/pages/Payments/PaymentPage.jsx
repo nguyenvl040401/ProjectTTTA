@@ -51,25 +51,6 @@ export default function PaymentPage() {
   const [success, setSuccess] = useState(false); // Hiện thông báo thành công
   const [error, setError] = useState("");
 
-  // Nếu có student_id trên URL → load thông tin học viên đó ngay
-    const selectStudent_id = async (student) => {
-      setSelected(student);
-      setResults([]);
-      // ...
-    };
-
-  useEffect(() => {
-    if (!preselectedId) return;
-
-    api
-      .get(`/students/${preselectedId}`)
-      .then((res) => {
-        const student = res.data.student || res.data;
-        selectStudent_id(student); // ✅ OK
-      })
-      .catch(() => {});
-  }, [preselectedId]);
-
   // Tìm kiếm học viên theo từ khoá — debounce 350ms để tránh gọi API liên tục
   // Chỉ tìm khi nhập từ 2 ký tự trở lên
   useEffect(() => {
@@ -132,6 +113,19 @@ export default function PaymentPage() {
       setDebt(null);
     }
   };
+
+  useEffect(() => {
+    if (!preselectedId) return;
+    api
+      .get(`/students/${preselectedId}`)
+      .then((res) => {
+        // Gọi selectStudent thay vì selectStudent_id (đã có sẵn bên dưới)
+        // selectStudent load thêm debt và điền sẵn số tiền
+        const student = res.data.student || res.data;
+        selectStudent(student);
+      })
+      .catch(() => {});
+  }, [preselectedId]); // eslint warning: selectStudent chưa có trong deps — OK vì hàm stable
 
   // Lưu thanh toán → reload công nợ → reset form (giữ nguyên HV để thu nhanh)
   const handleSubmit = async (e) => {

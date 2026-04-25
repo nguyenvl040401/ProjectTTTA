@@ -291,77 +291,80 @@ export default function StudentDetailPage() {
             </div>
           </div>
         )}
-      </div>
-      {/* ── XẾP LỚP (thêm lớp cho HV đã có) ───────────── */}
-      <div className="bg-white rounded-xl shadow-sm p-5">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-gray-700">
-            ➕ Xếp thêm lớp
-          </h3>
-          <button
-            onClick={() => setShowEnrollForm((v) => !v)}
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-          >
-            {showEnrollForm ? "✕ Đóng" : "＋ Xếp lớp"}
-          </button>
+        {/* ── XẾP LỚP (thêm lớp cho HV đã có) ───────────── */}
+        <div className="bg-white rounded-xl shadow-sm p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-gray-700">
+              ➕ Xếp thêm lớp
+            </h3>
+            <button
+              onClick={() => setShowEnrollForm((v) => !v)}
+              className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+            >
+              {showEnrollForm ? "✕ Đóng" : "＋ Xếp lớp"}
+            </button>
+          </div>
+
+          {showEnrollForm && (
+            <div className="space-y-3">
+              <select
+                value={enrollClassId}
+                onChange={(e) => setEnrollClassId(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">-- Chọn lớp --</option>
+                {availClasses.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} — {c.level} ({c.current_students ?? 0}/
+                    {c.max_students} HV)
+                  </option>
+                ))}
+              </select>
+
+              {enrollError && (
+                <p className="text-xs text-red-500">{enrollError}</p>
+              )}
+
+              <button
+                onClick={handleEnroll}
+                disabled={!enrollClassId || enrolling}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300
+                   text-white text-sm font-medium rounded-lg py-2 transition"
+              >
+                {enrolling ? "Đang xếp lớp..." : "✅ Xác nhận xếp lớp"}
+              </button>
+            </div>
+          )}
         </div>
 
-        {showEnrollForm && (
-          <div className="space-y-3">
-            <select
-              value={enrollClassId}
-              onChange={(e) => setEnrollClassId(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm
-                   focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">-- Chọn lớp --</option>
-              {availClasses.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name} — {c.level} ({c.current_students ?? 0}/
-                  {c.max_students} HV)
-                </option>
+        {/* ── LỊCH SỬ ĐIỂM DANH ──────────────────────────── */}
+        {attendance.length > 0 && (
+          <div className="bg-white rounded-xl shadow-sm p-5">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">
+              📋 Điểm danh gần đây
+            </h3>
+            <div className="divide-y divide-gray-100">
+              {attendance.map((a, idx) => (
+                <div
+                  key={idx}
+                  className="flex justify-between items-center py-2"
+                >
+                  <div className="text-sm text-gray-700">
+                    {formatDate(a.date)}
+                    {a.class?.name && (
+                      <span className="text-xs text-gray-400 ml-2">
+                        {a.class.name}
+                      </span>
+                    )}
+                  </div>
+                  <Badge status={a.status} />
+                </div>
               ))}
-            </select>
-
-            {enrollError && (
-              <p className="text-xs text-red-500">{enrollError}</p>
-            )}
-
-            <button
-              onClick={handleEnroll}
-              disabled={!enrollClassId || enrolling}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300
-                   text-white text-sm font-medium rounded-lg py-2 transition"
-            >
-              {enrolling ? "Đang xếp lớp..." : "✅ Xác nhận xếp lớp"}
-            </button>
+            </div>
           </div>
         )}
       </div>
-
-      {/* ── LỊCH SỬ ĐIỂM DANH ──────────────────────────── */}
-      {attendance.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm p-5">
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">
-            📋 Điểm danh gần đây
-          </h3>
-          <div className="divide-y divide-gray-100">
-            {attendance.map((a, idx) => (
-              <div key={idx} className="flex justify-between items-center py-2">
-                <div className="text-sm text-gray-700">
-                  {formatDate(a.date)}
-                  {a.class?.name && (
-                    <span className="text-xs text-gray-400 ml-2">
-                      {a.class.name}
-                    </span>
-                  )}
-                </div>
-                <Badge status={a.status} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </Layout>
   );
 }

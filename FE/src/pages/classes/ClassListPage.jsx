@@ -137,7 +137,7 @@ export default function ClassListPage() {
             {classes.map((cls) => (
               <div
                 key={cls.id}
-                onClick={() => navigate(`/classes/${cls.id}/edit`)}
+                onClick={() => navigate(`/classes/${cls.id}`)}
                 className="bg-white rounded-xl shadow-sm p-5 cursor-pointer
                            hover:shadow-md hover:-translate-y-0.5 transition-all"
               >
