@@ -22,7 +22,7 @@ class Attendance extends Model
         'class_id',      // liên kết lớp học (quan trọng nếu học 2 lớp)
         'enrollment_id', // liên kết enrollment
         'date',          // ngày học
-        'status',        // present (có mặt) / absent (vắng) / makeup (học bù)
+        'status',        // present / absent / late / excused
         'notes',         // ghi chú - VD: vắng có phép, học bù từ T5
     ];
 

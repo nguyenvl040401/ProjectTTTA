@@ -75,21 +75,24 @@ class Student extends Model
     // Công thức: tổng học phí thực tế - tổng đã đóng
     // VD: $student->debt → số tiền còn nợ (âm = đóng dư)
     public function getDebtAttribute()
-    {
-        // Tổng học phí từ các enrollment đang học
-        $totalFee = $this->activeEnrollments()->with('classes')->get()
-            ->sum(function ($enrollment) {
-                // Nếu có custom_fee thì dùng, không thì lấy từ lớp trừ discount
-                if ($enrollment->custom_fee) {
-                    return $enrollment->custom_fee;
-                }
-                return $enrollment->classes->fee_per_course
-                    * (1 - $enrollment->discount / 100);
-            });
+{
+    // Tính tất cả enrollment trừ paused (bảo lưu chưa học thì chưa tính tiền)
+    $totalFee = $this->enrollments()
+        ->whereIn('status', ['studying', 'left', 'completed'])
+        ->with('classes')
+        ->get()
+        ->sum(function ($enrollment) {
+            if ($enrollment->custom_fee) {
+                return $enrollment->custom_fee;
+            }
+            // Phòng trường hợp lớp đã bị xóa mềm
+            if (!$enrollment->classes) return 0;
+            return $enrollment->classes->fee_per_course
+                * (1 - $enrollment->discount / 100);
+        });
 
-        // Tổng tiền đã đóng
-        $totalPaid = $this->payments()->sum('amount');
+    $totalPaid = $this->payments()->sum('amount');
 
-        return $totalFee - $totalPaid;
-    }
+    return $totalFee - $totalPaid;
+}
 }

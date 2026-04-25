@@ -16,6 +16,7 @@ class Payment extends Model
     protected $fillable = [
         'student_id',      // liên kết học viên
         'enrollment_id',   // liên kết enrollment (lớp đang đóng tiền)
+        'due_date',        // hạn đóng tiền — dùng tính nợ quá hạn cho dashboard
         'amount',          // số tiền đã đóng - VD: 2800000
         'payment_date',    // ngày đóng tiền
         'payment_method',  // cash (tiền mặt) / transfer (chuyển khoản)
@@ -28,6 +29,7 @@ class Payment extends Model
     protected $casts = [
         'payment_date' => 'date',     // string → Carbon date
         'amount'       => 'decimal:0', // số tiền không có số thập phân
+        'due_date' => 'date', // hạn đóng tiền — dùng tính nợ quá hạn
     ];
 
     // ==================== RELATIONSHIPS ====================

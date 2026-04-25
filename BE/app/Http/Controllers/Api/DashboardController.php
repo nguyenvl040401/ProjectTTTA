@@ -52,8 +52,8 @@ class DashboardController extends Controller
                     ->sum('amount'),
 
                 // Doanh thu tháng trước (để so sánh tăng/giảm)
-                'revenue_last_month' => Payment::whereMonth('payment_date', $now->subMonth()->month)
-                    ->whereYear('payment_date', $now->subMonth()->year)
+                'revenue_last_month' => Payment::whereMonth('payment_date', $now->copy()->subMonth()->month)
+                    ->whereYear('payment_date', $now->copy()->subMonth()->year)
                     ->sum('amount'),
 
                 // Tổng công nợ toàn trung tâm
@@ -64,15 +64,13 @@ class DashboardController extends Controller
             'attendance' => [
                 // Tỷ lệ đi học tuần này (%)
                 'rate_this_week' => $this->calcAttendanceRate(
-                    $now->startOfWeek(),
-                    $now->endOfWeek()
-                ),
-
-                // Tỷ lệ đi học tháng này (%)
-                'rate_this_month' => $this->calcAttendanceRate(
-                    $now->startOfMonth(),
-                    $now->endOfMonth()
-                ),
+                $now->copy()->startOfWeek(),
+                $now->copy()->endOfWeek()
+            ),
+            'rate_this_month' => $this->calcAttendanceRate(
+                $now->copy()->startOfMonth(),
+                $now->copy()->endOfMonth()
+            ),
             ],
 
             // ========== LỚP HỌC ==========
@@ -106,7 +104,7 @@ class DashboardController extends Controller
     // = tổng học phí tất cả enrollment đang học - tổng đã đóng
     private function calcTotalDebt()
     {
-        $totalFee = Enrollment::where('status', 'studying')
+        $totalFee = Enrollment::whereIn('status', ['studying', 'left', 'completed'])
             ->with('classes')
             ->get()
             ->sum(function ($enrollment) {

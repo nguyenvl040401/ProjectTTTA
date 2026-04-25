@@ -52,6 +52,7 @@ class PaymentController extends Controller
         $request->validate([
             'student_id'     => 'required|exists:students,id',
             'enrollment_id'  => 'nullable|exists:enrollments,id',
+            'due_date' => 'nullable|date',
             'amount'         => 'required|numeric|min:1000',
             'payment_date'   => 'required|date',
             'payment_method' => 'required|in:cash,transfer',
@@ -62,8 +63,7 @@ class PaymentController extends Controller
         // Ghi nhận người tạo là admin đang đăng nhập
         $payment = Payment::create([
             ...$request->all(),
-            // 'created_by' => auth()->id(),
-            'created_by' => Auth::id(), // thay cho auth()->id()
+            'created_by' => Auth::id(),
         ]);
 
         // Load relationships để trả về đầy đủ thông tin
