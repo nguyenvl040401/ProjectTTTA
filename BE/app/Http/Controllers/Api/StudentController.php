@@ -147,7 +147,7 @@ class StudentController extends Controller
         return response()->json([
             'student_code' => $student->student_code,
             'full_name'    => $student->full_name,
-            'debt'         => $student->debt,
+            'total_debt'         => $student->debt,
             'payments'     => $student->payments,
         ]);
     }

@@ -14,24 +14,28 @@ class Enrollment extends Model
 
     // Các trường được phép nhập liệu từ ngoài vào
     protected $fillable = [
-        'student_id',   // liên kết học viên
-        'class_id',     // liên kết lớp học
+        'student_id',    // liên kết học viên
+        'class_id',      // liên kết lớp học
         'enrolled_date', // ngày vào lớp
-        'left_date',    // ngày rời lớp (nếu có)
-        'status',       // studying / left / paused / completed
-        'custom_fee',   // học phí riêng (override nếu giảm giá đặc biệt)
-        'discount',     // % giảm giá - VD: 10 = giảm 10%
-        'notes',        // ghi chú - VD: con giáo viên cũ
+        'left_date',     // ngày rời lớp (nếu có)
+        'status',        // studying / left / paused / completed
+        'custom_fee',    // học phí riêng (override nếu giảm giá đặc biệt)
+        'discount',      // % giảm giá - VD: 10 = giảm 10%
+        'notes',         // ghi chú - VD: con giáo viên cũ
     ];
 
     // Tự động convert kiểu dữ liệu khi lấy ra
     protected $casts = [
-        'enrolled_date' => 'date', // string → Carbon date
-        'left_date'     => 'date',
-        'custom_fee'    => 'decimal:0',
-        'discount'      => 'decimal:2',
+        'enrolled_date' => 'date',     // string → Carbon date
+        'left_date'     => 'date',     // string → Carbon date
+        'custom_fee'    => 'decimal:0', // số tiền không có số thập phân
+        'discount'      => 'decimal:2', // % giảm giá, giữ 2 chữ số thập phân - VD: 10.00
     ];
 
+    // Tự động đính kèm các computed attribute vào toArray() / toJson()
+    // Nhờ vậy khi FE gọi API, actual_fee luôn có trong response
+    // mà không cần gọi thêm $enrollment->actual_fee thủ công
+    protected $appends = ['actual_fee'];
     // ==================== RELATIONSHIPS ====================
 
     // 1 Enrollment thuộc về 1 Student
@@ -69,10 +73,18 @@ class Enrollment extends Model
     // VD: $enrollment->actual_fee → 2520000
     public function getActualFeeAttribute()
     {
+        // Ưu tiên 1: dùng custom_fee nếu có (học phí thỏa thuận riêng)
         if ($this->custom_fee) {
             return $this->custom_fee;
         }
-        return $this->classes->fee_per_course
-            * (1 - $this->discount / 100);
-    }
+        // Ưu tiên 2: query trực tiếp kèm withTrashed()
+        // không dùng $this->classes vì relation đó không có withTrashed
+        // → nếu lớp đã xóa mềm sẽ trả null → crash hoặc tính sai
+        $class = $this->classes()->withTrashed()->first();
+        // Phòng trường hợp lớp không tồn tại trong DB (đã xóa cứng)
+        if (!$class) return 0;
+        // Học phí thực tế = học phí lớp × (1 - discount%)
+        // VD: 3.000.000 × (1 - 10/100) = 2.700.000
+        return $class->fee_per_course * (1 - $this->discount / 100);
+    }   
 }

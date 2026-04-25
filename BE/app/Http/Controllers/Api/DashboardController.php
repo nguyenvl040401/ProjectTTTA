@@ -105,12 +105,15 @@ class DashboardController extends Controller
     private function calcTotalDebt()
     {
         $totalFee = Enrollment::whereIn('status', ['studying', 'left', 'completed'])
-            ->with('classes')
+            ->with(['classes' => function ($q) {
+                $q->withTrashed(); // lấy cả lớp đã xóa mềm
+            }])
             ->get()
             ->sum(function ($enrollment) {
                 if ($enrollment->custom_fee) {
                     return $enrollment->custom_fee;
                 }
+                if (!$enrollment->classes) return 0; // guard null
                 return $enrollment->classes->fee_per_course
                     * (1 - $enrollment->discount / 100);
             });

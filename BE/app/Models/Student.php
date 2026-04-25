@@ -74,25 +74,39 @@ class Student extends Model
     // Tự tính công nợ của học viên
     // Công thức: tổng học phí thực tế - tổng đã đóng
     // VD: $student->debt → số tiền còn nợ (âm = đóng dư)
-    public function getDebtAttribute()
+public function getDebtAttribute()
 {
-    // Tính tất cả enrollment trừ paused (bảo lưu chưa học thì chưa tính tiền)
+    // Lấy tất cả enrollment có phát sinh học phí
+    // paused (bảo lưu) không tính vì học viên chưa học
     $totalFee = $this->enrollments()
         ->whereIn('status', ['studying', 'left', 'completed'])
-        ->with('classes')
+        ->with(['classes' => function ($q) {
+            $q->withTrashed(); // lấy cả lớp đã xóa mềm để tính đúng học phí
+                               // nếu không có withTrashed(), lớp đã xóa trả null
+                               // → bỏ sót học phí → debt tính sai
+        }])
         ->get()
         ->sum(function ($enrollment) {
+            // Ưu tiên 1: dùng custom_fee nếu có (học phí thỏa thuận riêng)
             if ($enrollment->custom_fee) {
                 return $enrollment->custom_fee;
             }
-            // Phòng trường hợp lớp đã bị xóa mềm
+            // Ưu tiên 2: phòng trường hợp lớp bị xóa mà không có custom_fee
+            // → không tính được học phí → bỏ qua, trả 0
             if (!$enrollment->classes) return 0;
+            // Ưu tiên 3: học phí lớp × (1 - discount%)
+            // VD: 3.000.000 × (1 - 10/100) = 2.700.000
             return $enrollment->classes->fee_per_course
                 * (1 - $enrollment->discount / 100);
         });
 
+    // Tổng tiền học viên đã thực tế đóng
     $totalPaid = $this->payments()->sum('amount');
 
+    // Công nợ = tổng học phí phải đóng - tổng đã đóng
+    // Kết quả dương  → còn nợ
+    // Kết quả âm     → đóng dư (có thể trừ vào kỳ sau)
+    // Kết quả bằng 0 → đã đóng đủ
     return $totalFee - $totalPaid;
 }
 }
